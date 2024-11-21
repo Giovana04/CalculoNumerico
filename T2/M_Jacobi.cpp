@@ -33,7 +33,7 @@ int main() {
         cin >> b[i];
     }
 
-    cout << "Digite o erro desejado (e): ";
+    cout << "Digite o erro desejado (triangulinho): ";
     cin >> e;
 
     cout << "Digite o numero maximo de iteracoes: ";
@@ -41,7 +41,7 @@ int main() {
 
     double* resultado = jacobi(matriz, b, n, e, numIter);
 
-    cout << "Resultado da solução aproximada: \n";
+    cout << "Resultado da solucao aproximada: \n";
     for (int i = 0; i < n; i++) {
         cout << "x[" << i << "] = " << resultado[i] << endl;
     }
