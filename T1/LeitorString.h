@@ -35,6 +35,8 @@ double trigonometria(const string& funcao, double valor) {
     if (funcao == "cosec") return 1.0 / sin(valor);
     if (funcao == "sec") return 1.0 / cos(valor);
     if (funcao == "cotg") return 1.0 / tan(valor);
+    if (funcao == "log") return log10(valor);
+    if (funcao == "ln") return log(valor);
     return 0;
 }
 
@@ -79,13 +81,13 @@ double avaliaFuncao(string funcao, double x) {
         }
 
         if (funcao[percorre] == '(') {
-            int balance = 1;
-            size_t start = percorre + 1;
-            while (balance != 0 && ++percorre < funcao.length()) {
-                if (funcao[percorre] == '(') balance++;
-                if (funcao[percorre] == ')') balance--;
+            int balanciar = 1;
+            size_t ini = percorre + 1;
+            while (balanciar != 0 && ++percorre < funcao.length()) {
+                if (funcao[percorre] == '(') balanciar++;
+                if (funcao[percorre] == ')') balanciar--;
             }
-            string exprInterna = funcao.substr(start, percorre - start);
+            string exprInterna = funcao.substr(ini, percorre - ini);
             double valorInterno = avaliaFuncao(exprInterna, x);
 
             // Aplicar sinal negativo, se necessário
@@ -113,14 +115,14 @@ double avaliaFuncao(string funcao, double x) {
             }
             if (funcao[percorre] == '(') {
                 percorre++;
-                int balance = 1;
-                size_t start = percorre;
-                while (balance != 0 && percorre < funcao.length()) {
-                    if (funcao[percorre] == '(') balance++;
-                    else if (funcao[percorre] == ')') balance--;
+                int balanciar = 1;
+                size_t ini = percorre;
+                while (balanciar != 0 && percorre < funcao.length()) {
+                    if (funcao[percorre] == '(') balanciar++;
+                    else if (funcao[percorre] == ')') balanciar--;
                     percorre++;
                 }
-                string exprInterna = funcao.substr(start, percorre - start - 1);
+                string exprInterna = funcao.substr(ini, percorre - ini - 1);
                 double valorInterno = avaliaFuncao(exprInterna, x);
                 double resultadoFuncao = trigonometria(nomeFuncao, valorInterno);
                 valores.push(resultadoFuncao);
