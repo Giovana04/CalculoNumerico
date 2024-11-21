@@ -6,10 +6,12 @@
 
 using namespace std;
 
+//Verifica se é operador
 bool ehOperador(char op) {
     return op == '+' || op == '-' || op == '*' || op == '/' || op == '^';
 }
 
+//Define a prioridade dos operadores
 int prioridade(char op) {
     if (op == '+' || op == '-') return 1;
     if (op == '*' || op == '/') return 2;
@@ -17,6 +19,7 @@ int prioridade(char op) {
     return 0;
 }
 
+//Aplica as operações
 double aplicarOperacao(double a, double b, char op) {
     switch (op) {
         case '+': return a + b;
@@ -28,6 +31,7 @@ double aplicarOperacao(double a, double b, char op) {
     }
 }
 
+//Faz as partes que tem letra
 double trigonometria(const string& funcao, double valor) {
     if (funcao == "cos") return cos(valor);
     if (funcao == "sin") return sin(valor);
@@ -40,6 +44,7 @@ double trigonometria(const string& funcao, double valor) {
     return 0;
 }
 
+//Deixa pronto para aplicar a operação
 void processarOperadores(stack<double>& valores, stack<char>& operadores) {
     double valor2 = valores.top(); valores.pop();
     double valor1 = valores.top(); valores.pop();
@@ -47,12 +52,15 @@ void processarOperadores(stack<double>& valores, stack<char>& operadores) {
     valores.push(aplicarOperacao(valor1, valor2, op));
 }
 
+//Define funcionamento da transformação da função
 double avaliaFuncao(string funcao, double x) {
     stack<double> valores;
     stack<char> operadores;
     size_t percorre = 0;
 
     while (percorre < funcao.length()) {
+        
+        //Ignora espaço em branco
         if (isspace(funcao[percorre])) {
             percorre++;
             continue;
@@ -60,11 +68,12 @@ double avaliaFuncao(string funcao, double x) {
 
         // Tratamento do sinal negativo
         if (funcao[percorre] == '-' && (percorre == 0 || funcao[percorre - 1] == '(' || ehOperador(funcao[percorre - 1]))) {
-            operadores.push('~'); // Usamos ~ como marcador de negação unária
+            operadores.push('~'); // ~ Como marcador de negação
             percorre++;
             continue;
         }
 
+        //Análisa o número por inteiro
         if (isdigit(funcao[percorre]) || funcao[percorre] == '.') {
             size_t j = percorre;
             while (j < funcao.length() && (isdigit(funcao[j]) || funcao[j] == '.')) j++;
@@ -74,12 +83,14 @@ double avaliaFuncao(string funcao, double x) {
             continue;
         }
 
+        //Acha a variável
         if (funcao[percorre] == 'x') {
             valores.push(x);
             percorre++;
             continue;
         }
 
+        //Tratamento recursivo de parênteses
         if (funcao[percorre] == '(') {
             int balanciar = 1;
             size_t ini = percorre + 1;
@@ -90,7 +101,7 @@ double avaliaFuncao(string funcao, double x) {
             string exprInterna = funcao.substr(ini, percorre - ini);
             double valorInterno = avaliaFuncao(exprInterna, x);
 
-            // Aplicar sinal negativo, se necessário
+            // Aplica sinal negativo
             if (!operadores.empty() && operadores.top() == '~') {
                 valorInterno = -valorInterno;
                 operadores.pop();
@@ -100,7 +111,8 @@ double avaliaFuncao(string funcao, double x) {
             percorre++;
             continue;
         }
-
+        
+        //Vê se é um alfabeto (se é cos, sen, e, ln ... etc)
         if (isalpha(funcao[percorre])) {
             string nomeFuncao;
             while (percorre < funcao.length() && isalpha(funcao[percorre])) {
@@ -110,7 +122,7 @@ double avaliaFuncao(string funcao, double x) {
             if (nomeFuncao == "e" && funcao[percorre] == '^') {
                 percorre++;
                 operadores.push('^');
-                valores.push(M_E);
+                valores.push(M_E); // Juro que não da problema (juro mesmo)
                 continue;
             }
             if (funcao[percorre] == '(') {
@@ -130,6 +142,7 @@ double avaliaFuncao(string funcao, double x) {
             }
         }
 
+        //Organiza a pilha de operadores
         if (ehOperador(funcao[percorre])) {
             while (!operadores.empty() && prioridade(operadores.top()) >= prioridade(funcao[percorre]) && operadores.top() != '(') {
                 processarOperadores(valores, operadores);
@@ -139,6 +152,7 @@ double avaliaFuncao(string funcao, double x) {
         }
     }
 
+    //Aplica as operações    
     while (!operadores.empty()) {
         if (operadores.top() == '~') {
             double valor = valores.top(); valores.pop();

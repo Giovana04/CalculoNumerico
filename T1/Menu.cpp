@@ -4,11 +4,17 @@
 using namespace std;
 
 double moduloUM(double a);
+
 double moduloDOIS(double a, double b);
+
 void M_Bissexcao(string funcao);
+
 void M_MIL(string funcao);
+
 void M_Newton(string funcao);
+
 void M_RegulaFalsi(string funcao);
+
 void M_Secante(string funcao);
 
 int main(){
