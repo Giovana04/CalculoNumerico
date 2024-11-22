@@ -19,7 +19,7 @@ void M_Secante(string funcao);
 
 int main(){
     string funcao;
-    cout << "Cosseno = cos\nSeno = sin\nTangente = tg\nCossecante = cosec\nSecante = sec\nCotangente = cotg\n\n";
+    cout << "Cosseno = cos\nSeno = sin\nTangente = tg\nCossecante = cosec\nSecante = sec\nCotangente = cotg\nSentiu que da pra botar parenteses? pois coloque!\n\n";
     cout << "Digite a funcao (use 'x' como variavel): ";
     getline(cin, funcao);
 
