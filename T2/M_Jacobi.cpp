@@ -4,6 +4,7 @@
 
 using namespace std;
 
+bool verificarDiagonalDominante(double** matriz, int n);
 double* jacobi(double** matriz, double* b, int n, double e, int numIter);
 double calcErro(double* a, double* b, int n);
 
@@ -39,6 +40,16 @@ int main() {
     cout << "Digite o numero maximo de iteracoes: ";
     cin >> numIter;
 
+    if (!verificarDiagonalDominante(matriz, n)) {
+        cout << "A matriz não é diagonal dominante. O método de Jacobi pode não convergir." << endl;
+        for (int i = 0; i < n; i++) {
+            delete[] matriz[i];
+        }
+        delete[] matriz;
+        delete[] b;
+        return 1;
+    }
+
     double* resultado = jacobi(matriz, b, n, e, numIter);
 
     cout << "Resultado da solucao aproximada: \n";
@@ -54,6 +65,21 @@ int main() {
     delete[] b;
 
     return 0;
+}
+
+bool verificarDiagonalDominante(double** matriz, int n) {
+    for (int i = 0; i < n; i++) {
+        double soma = 0.0;
+        for (int j = 0; j < n; j++) {
+            if (i != j) {
+                soma += fabs(matriz[i][j]);
+            }
+        }
+        if (fabs(matriz[i][i]) < soma) {
+            return false;
+        }
+    }
+    return true;
 }
 
 double* jacobi(double** matriz, double* b, int n, double e, int numIter) {
@@ -89,7 +115,6 @@ double* jacobi(double** matriz, double* b, int n, double e, int numIter) {
     delete[] x0;
     return x;
 }
-
 
 double calcErro(double* a, double* b, int n) {
     double maior = 0, diferenca;
