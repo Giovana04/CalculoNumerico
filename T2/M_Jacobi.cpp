@@ -4,7 +4,7 @@
 
 using namespace std;
 
-bool verificarDiagonalDominante(double** matriz, int n);
+bool tornarDiagonalDominante(double** matriz, double* b, int n);
 double* jacobi(double** matriz, double* b, int n, double e, int numIter);
 double calcErro(double* a, double* b, int n);
 
@@ -40,15 +40,16 @@ int main() {
     cout << "Digite o numero maximo de iteracoes: ";
     cin >> numIter;
 
-    if (!verificarDiagonalDominante(matriz, n)) {
-        cout << "A matriz não é diagonal dominante. O método de Jacobi pode não convergir." << endl;
-        for (int i = 0; i < n; i++) {
-            delete[] matriz[i];
-        }
-        delete[] matriz;
-        delete[] b;
-        return 1;
+    if (!tornarDiagonalDominante(matriz, b, n)) {
+    cout << "A matriz nao pode ser tornada diagonal dominante. O metodo de Jacobi pode nao convergir." << endl;
+    for (int i = 0; i < n; i++) {
+        delete[] matriz[i];
     }
+    delete[] matriz;
+    delete[] b;
+    return 1;
+}
+
 
     double* resultado = jacobi(matriz, b, n, e, numIter);
 
@@ -67,7 +68,32 @@ int main() {
     return 0;
 }
 
-bool verificarDiagonalDominante(double** matriz, int n) {
+bool tornarDiagonalDominante(double** matriz, double* b, int n) {
+    int* permutacao = new int[n];
+    for (int i = 0; i < n; i++) {
+        permutacao[i] = i; 
+    }
+
+    for (int i = 0; i < n; i++) {
+        double maior = fabs(matriz[i][i]);
+        int coluna_maior = i;
+
+        for (int j = i + 1; j < n; j++) {
+            if (fabs(matriz[i][j]) > maior) {
+                maior = fabs(matriz[i][j]);
+                coluna_maior = j;
+            }
+        }
+
+        if (coluna_maior != i) {
+            for (int k = 0; k < n; k++) {
+                swap(matriz[k][i], matriz[k][coluna_maior]);
+            }
+            swap(permutacao[i], permutacao[coluna_maior]);
+        }
+    }
+
+    bool diagonalDominante = true;
     for (int i = 0; i < n; i++) {
         double soma = 0.0;
         for (int j = 0; j < n; j++) {
@@ -76,11 +102,15 @@ bool verificarDiagonalDominante(double** matriz, int n) {
             }
         }
         if (fabs(matriz[i][i]) < soma) {
-            return false;
+            diagonalDominante = false;
+            break;
         }
     }
-    return true;
+
+    delete[] permutacao;
+    return diagonalDominante;
 }
+
 
 double* jacobi(double** matriz, double* b, int n, double e, int numIter) {
     double* x0 = new double[n];
