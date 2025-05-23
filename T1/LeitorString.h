@@ -34,7 +34,7 @@ double aplicarOperacao(double a, double b, char op) {
 //Faz as partes que tem letra
 double trigonometria(const string& funcao, double valor) {
     if (funcao == "cos") return cos(valor);
-    if (funcao == "sin") return sin(valor);
+    if (funcao == "sen") return sin(valor);
     if (funcao == "tg") return tan(valor);
     if (funcao == "cosec") return 1.0 / sin(valor);
     if (funcao == "sec") return 1.0 / cos(valor);
@@ -122,7 +122,7 @@ double avaliaFuncao(string funcao, double x) {
             if (nomeFuncao == "e" && funcao[percorre] == '^') {
                 percorre++;
                 operadores.push('^');
-                valores.push(M_E); // Juro que não da problema (juro mesmo)
+                valores.push(M_E); //Juro que não da problema (juro mesmo)
                 continue;
             }
             if (funcao[percorre] == '(') {
